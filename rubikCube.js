@@ -6,9 +6,10 @@ class RubikCube {
 		this.animation = true;
 		//-----------------------------------------
 		
+		this.rotationSpeed = abs(this.rotationSpeed);
 		this.rotationMax=HALF_PI;
 		this.rotatedAngle=0;
-		this.rotationDirection;
+		// this.rotationDirection;
 		
 		if(isNaN(size)) return;
 		
@@ -55,81 +56,12 @@ class RubikCube {
 						break;
 				}
 				this.selection[counter++] = this.cubes[index];
+				
 			}
 		}
 		return this.selection;
 	}
-	
-	swapArrayL() {
-		switch(this.rotationAxis){
-			case 'x':
-			case 'z':
-				this.selectionSwapL();
-				break;
-			case 'y':
-				this.selectionSwapR();
-				break;
-		}
-		this.mergeSelection();		
-		// let counter = 0,index;
-		// for(let i=0;i<this.size;i++){
-			// for(let j=0;j<this.size;j++){
-				// switch(this.rotationAxis) {
-					// case 'x':
-						// index = i * this.size2 + j * this.size + this.column;
-						// break;
-					// case 'y':
-						// index = i * this.size2 + this.column * this.size + j;
-						// break;
-					// case 'z':
-						// index = this.column * this.size2 + i * this.size + j;
-						// break;
-					// default:
-						// index = 0 * this.size2 + i * this.size + j; // z axis 0 column
-						// break;
-				// }
-				// this.cubes[index] = this.selection[counter++];
-			// }
-		// }
-		
-	}
-	
-	swapArrayR() {
-		switch(this.rotationAxis){
-			case 'x':
-			case 'z':
-				this.selectionSwapR();
-				break;
-			case 'y':
-				this.selectionSwapL();
-				break;
-		}
-		this.mergeSelection();
-		// let counter = 0,index;
-		// for(let i=0;i<this.size;i++){
-			// for(let j=0;j<this.size;j++){
-				// switch(this.rotationAxis) {
-					// case 'x':
-						// index = i * this.size2 + j * this.size + this.column;
-						// break;
-					// case 'y':
-						// index = i * this.size2 + this.column * this.size + j;
-						// break;
-					// case 'z':
-						// index = this.column * this.size2 + i * this.size + j;
-						// break;
-					// default:
-						// index = 0 * this.size2 + i * this.size + j; // z axis 0 column
-						// break;
-				// }
-				// this.cubes[index] = this.selection[counter++];
-				
-			// }
 			
-		// }
-		
-	}
-	
 	mergeSelection() {
 		
 		let counter = 0,index;
@@ -154,11 +86,36 @@ class RubikCube {
 			}
 			
 		}
+	}
+	
+	swapSelectionL() {
+		switch(this.rotationAxis){
+			case 'x':
+			case 'z':
+				this.swapSelectionL_sub();
+				break;
+			case 'y':
+				this.swapSelectionR_sub();
+				break;
+		}
+		
+
+	}
+	
+	swapSelectionR() {
+		switch(this.rotationAxis){
+			case 'x':
+			case 'z':
+				this.swapSelectionR_sub();
+				break;
+			case 'y':
+				this.swapSelectionL_sub();
+				break;
+		}
 		
 	}
 	
-	
-	selectionSwapR() {
+	swapSelectionR_sub(array) {
 		//clock wise
 		let index,index2;
 		for(let i=0;i<this.size;i++){
@@ -167,12 +124,11 @@ class RubikCube {
 				index2 = j*this.size + (this.size-i-1);
 				this.selectionTemp[index2] = this.selection[index];
 			}
-			
 		}
 		for(let i=0;i<this.selection.length;i++) this.selection[i] = this.selectionTemp[i];
 	}
 	
-	selectionSwapL() {
+	swapSelectionL_sub() {
 		//counter clock wise
 		let index,index2;
 		for(let i=0;i<this.size;i++){
@@ -181,18 +137,19 @@ class RubikCube {
 				index2 = (this.size-j-1)*this.size + i;
 				this.selectionTemp[index2] = this.selection[index];
 			}
-			
 		}
-		console.log('selection length : ',this.selection.length);
 		for(let i=0;i<this.selection.length;i++) this.selection[i] = this.selectionTemp[i];
 	}
 	
 	rotateR(axis,column) {
 		//clock wise
-		if(!this.animation){
 			this.rotationAxis = axis;
 			this.column = column;
-			rotateInstant(-HALF_PI);
+			this.rotationVector = -this.rotationSpeed;
+			this.rotationTotal = -this.rotationMax;
+		if(!this.animation){
+			for(let item of this.selection)
+				rotateCube(item,this.rotationTotal);
 		} else {
 			if(this.onTransition) return;
 			this.onTransition = true;
@@ -207,15 +164,18 @@ class RubikCube {
 	
 	rotateL(axis,column) {
 		// counter clock wise
-		if(!this.animation){
 			this.rotationAxis = axis;
 			this.column = column;
-			rotateInstant(HALF_PI);
+			this.rotationVector = this.rotationSpeed;
+			this.rotationTotal = this.rotationMax;
+		
+		if(!this.animation){
+			for(let item of this.selection)
+				rotateCube(item,this.rotationTotal);
 		} else {
 			if(this.onTransition) return;
 			this.onTransition = true;
-			this.rotationAxis = axis;
-			this.column = column;
+			
 			this.select(axis,column);
 			for(let item of this.selection) {
 				item.tran.push();	
@@ -223,59 +183,63 @@ class RubikCube {
 		}
 	}
 	
-	rotateInstant(rad) {
+	rotateCube(cube,rad) {
 		switch(this.rotationAxis){
 			case 'x':
-				item.rotateX(rad);
+				cube.rotateX(rad);
 				break;
 			case 'y':
-				item.rotateY(rad);
+				cube.rotateY(rad);
 				break;
 			case 'z':
-				item.rotateZ(rad);
+				cube.rotateZ(rad);
 				break;
 		}
 	}
 
 	draw() {
 		if(this.animation  && this.onTransition){
-			if(this.rotatedAngle < this.rotationMax){
+			if(abs(this.rotatedAngle) < this.rotationMax){
 				for(let item of this.selection) {
 					switch(this.rotationAxis) {
 						case 'x':
-							item.rotateX(this.rotationSpeed);
+							item.rotateX(this.rotationVector);
 							break;
 						case 'y':
-							item.rotateY(this.rotationSpeed);
+							item.rotateY(this.rotationVector);
 							break;
 						case 'z':
-							item.rotateZ(this.rotationSpeed);
+							item.rotateZ(this.rotationVector);
 							break;
 					}
-					
 				}
-				this.rotatedAngle += this.rotationSpeed;
+				this.rotatedAngle += this.rotationVector;
 			} else {
 				for(let item of this.selection) {
 					item.tran.pop();
 					
 					switch(this.rotationAxis){
 						case 'x':
-							item.rotateX(HALF_PI);
+							// item.rotateX(HALF_PI);
+							item.rotateX(this.rotationTotal);
 							break;
 						case 'y':
-							item.rotateY(HALF_PI);
+							item.rotateY(this.rotationTotal);
 							break;
 						case 'z':
-							item.rotateZ(HALF_PI);
+							item.rotateZ(this.rotationTotal);
 							break;
-					}
-					
+					}					
 				}
 				this.onTransition = false;
 				this.rotatedAngle = 0;
-				this.swapArrayL();
 				
+				if(this.rotationVector>0)
+					this.swapSelectionL();
+				else
+					this.swapSelectionR();
+				
+				this.mergeSelection();		
 			}
 		}
 		
