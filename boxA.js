@@ -8,8 +8,6 @@ class BoxA{
 		this.tv = [];
 		this.tvTemp = [];
 		
-		// this.color = 'red'
-		// this.setRotationX(rad);
 		let hw = this.w / 2;
 		let hh = this.h / 2;
 		let hd = this.d / 2;
@@ -78,7 +76,7 @@ class BoxA{
 		vertex(this.tv[2].x,this.tv[2].y,this.tv[2].z,this.w+offset,this.h+offset);
 		vertex(this.tv[3].x,this.tv[3].y,this.tv[3].z,0+offset,this.h+offset);
 		endShape(CLOSE);
-		// texture(img2);
+		
 		offset += 200;
 		beginShape();
 		vertex(this.tv[4].x,this.tv[4].y,this.tv[4].z,0+offset,0+offset);
@@ -114,7 +112,7 @@ class BoxA{
 		vertex(this.tv[7].x,this.tv[7].y,this.tv[7].z,this.w+offset,this.h+offset);
 		vertex(this.tv[4].x,this.tv[4].y,this.tv[4].z,0+offset,this.h+offset);
 		endShape(CLOSE);
-		// pop();
+		
 	}
 }
 

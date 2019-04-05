@@ -80,24 +80,4 @@ function draw() {
 
 }
 
-// function makeRubikCube(size=3,cubesize=20,gap=2) {
-	// if(isNaN(size)) return;
-	// size = size | 0;
-	// size2 = size * size;
-	// let halfLength = (cubesize * size + gap*(size-1) )/ 2;
-	
-	// for(let k=0;k<size;k++){
-		// for(let i=0;i<size;i++){
-			// for(let j=0;j<size;j++){
-				// let x = j*(cubesize+gap) - halfLength + cubesize/2;
-				// let y = i*(cubesize+gap) - halfLength + cubesize/2;
-				// let z = k*(cubesize+gap) - halfLength + cubesize/2;
-	
-				// boxes.push(new BoxA(x,y,z,cubesize,cubesize,cubesize));
-			// }
-		// }
-	// }
-	
-// }
-
 

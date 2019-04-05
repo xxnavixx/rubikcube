@@ -4,7 +4,6 @@ class MyTransform3D {
 		this._matrixHistory = []
 		this._result = createVector(0,0,0);
 		this.matrix = new MyMatrix3D();
-		// this.matrix.console();
 	}
 	
 	applyMatrix(matrix) {
@@ -19,15 +18,11 @@ class MyTransform3D {
 	transform(x,y,z) {
 		// returning transformed x,y,z coordinate as p5 vector;
 		if(isNaN(x) || isNaN(y) || isNaN(z)) {console.log('input is not number');return;}
-		// this._result.set(x,y,z);
-		// this.matrix.console();
-		// console.log('x y z',x,y,z);
 		
 		this._result.x = this.matrix.a * x + this.matrix.b * y + this.matrix.c * z;
 		this._result.y = this.matrix.d * x + this.matrix.e * y + this.matrix.f * z;
 		this._result.z = this.matrix.g * x + this.matrix.h * y + this.matrix.i * z;
-		
-		// console.log('tx ty tz ', this._result.x,this._result.y,this._result.z);
+				
 		return this._result;
 	}
 	
@@ -40,19 +35,16 @@ class MyTransform3D {
 	
 	rotateX(rad) {
 		let m = new MyMatrix3D(1,0,0, 0,cos(rad),sin(rad), 0,-sin(rad),cos(rad));
-		// m.console();
 		this.applyMatrix(m);
 	}
 	
 	rotateY(rad) {
 		let m = new MyMatrix3D(cos(rad),0,-sin(rad), 0,1,0, sin(rad),0,cos(rad));
-		// m.console();
 		this.applyMatrix(m);
 	}
 	
 	rotateZ(rad) {
 		let m = new MyMatrix3D(cos(rad),sin(rad),0, -sin(rad),cos(rad),0, 0,0,1);
-		// m.console();
 		this.applyMatrix(m);
 	}
 	
@@ -62,18 +54,12 @@ class MyTransform3D {
 	
 	pop() {
 		this.matrix = this._matrixHistory.pop();
-		// this.matrix.console();
 	}
 	
 	resetMatrix() {
 		this.matrix.set();
 	}
-	
-	addRotationYmatrix() {
-	}
-	
-	addRotationZmatrix() {
-	}
+
 }
 
 class MyMatrix3D{
