@@ -9,7 +9,6 @@ class RubikCube {
 		this.rotationSpeed = abs(this.rotationSpeed);
 		this.rotationMax=HALF_PI;
 		this.rotatedAngle=0;
-		// this.rotationDirection;
 		
 		if(isNaN(size)) return;
 		
@@ -23,14 +22,14 @@ class RubikCube {
 		
 		this.onTransition = false;
 		let halfLength = (boxSize * size + gap*(size-1) )/ 2;
-		// console.log(halfLength);
-		for(let k=0;k<size;k++){
-			for(let i=0;i<size;i++){
-				for(let j=0;j<size;j++){
-					let x = j*(boxSize+gap) - halfLength + boxSize/2;
-					let y = i*(boxSize+gap) - halfLength + boxSize/2;
-					let z = k*(boxSize+gap) - halfLength + boxSize/2;
-					// console.log(x,y,z,boxSize,gap);
+		
+		for(let k=0;k<this.size;k++){
+			for(let i=0;i<this.size;i++){
+				for(let j=0;j<this.size;j++){
+					let x = j*(boxSize+gap) - halfLength + this.boxSize/2;
+					let y = i*(boxSize+gap) - halfLength + this.boxSize/2;
+					let z = k*(boxSize+gap) - halfLength + this.boxSize/2;
+					
 					this.cubes.push(new BoxA(x,y,z,boxSize,boxSize,boxSize));
 				}
 			}
@@ -38,6 +37,7 @@ class RubikCube {
 	}
 	
 	select(axis,column) {
+		if(column < 0 || column > this.size-1 ) {console.log('index out of range');return;}
 		let counter = 0,index;
 		for(let i=0;i<this.size;i++){
 			for(let j=0;j<this.size;j++){
@@ -55,6 +55,7 @@ class RubikCube {
 						index = 0 * this.size2 + i * this.size + j; // z axis 0 column
 						break;
 				}
+				
 				this.selection[counter++] = this.cubes[index];
 				
 			}
@@ -143,10 +144,11 @@ class RubikCube {
 	
 	rotateR(axis,column) {
 		//clock wise
-			this.rotationAxis = axis;
-			this.column = column;
-			this.rotationVector = -this.rotationSpeed;
-			this.rotationTotal = -this.rotationMax;
+		if(column < 0 || column > this.size-1 ) {console.log('index out of range');return;}
+		this.rotationAxis = axis;
+		this.column = column;
+		this.rotationVector = -this.rotationSpeed;
+		this.rotationTotal = -this.rotationMax;
 		if(!this.animation){
 			for(let item of this.selection)
 				rotateCube(item,this.rotationTotal);
@@ -164,10 +166,11 @@ class RubikCube {
 	
 	rotateL(axis,column) {
 		// counter clock wise
-			this.rotationAxis = axis;
-			this.column = column;
-			this.rotationVector = this.rotationSpeed;
-			this.rotationTotal = this.rotationMax;
+		if(column < 0 || column > this.size-1 ) {console.log('index out of range');return;}
+		this.rotationAxis = axis;
+		this.column = column;
+		this.rotationVector = this.rotationSpeed;
+		this.rotationTotal = this.rotationMax;
 		
 		if(!this.animation){
 			for(let item of this.selection)

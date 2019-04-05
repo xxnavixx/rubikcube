@@ -71,7 +71,7 @@ class BoxA{
 		this.transform();
 		
 		let offset = 0; // to move texture crop point
-		texture(img2);
+		texture(img);
 		beginShape();
 		vertex(this.tv[0].x,this.tv[0].y,this.tv[0].z,0+offset,0+offset);
 		vertex(this.tv[1].x,this.tv[1].y,this.tv[1].z,this.w+offset,0+offset);
