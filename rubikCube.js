@@ -155,8 +155,8 @@ class RubikCube {
 		} else {
 			if(this.onTransition) return;
 			this.onTransition = true;
-			this.rotationAxis = axis;
-			this.column = column;
+			// this.rotationAxis = axis;
+			// this.column = column;
 			this.select(axis,column);
 			for(let item of this.selection) {
 				item.tran.push();	
