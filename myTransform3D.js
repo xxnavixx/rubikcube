@@ -12,7 +12,7 @@ class MyTransform3D {
 		this.matrix.set(matrix);
 		
 		// this.matrix.mult(matrix);
-		
+
 	}
 	
 	transform(x,y,z) {
@@ -28,7 +28,7 @@ class MyTransform3D {
 	
 	// collapse() {
 		// for(let i=this.matrice.length-1;i>0;i--) {
-			// this.matrice[i].mult(this.matrice[i-1]);
+			// this.matrice[i].mult(this.matrice[i-1]); // order is wrong
 		// }
 		// this.matrice.splice(1,this.matrice.length-1);
 	// }

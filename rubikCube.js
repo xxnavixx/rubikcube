@@ -145,6 +145,7 @@ class RubikCube {
 	rotateR(axis,column) {
 		//clock wise
 		if(column < 0 || column > this.size-1 ) {console.log('index out of range');return;}
+		if(this.onTransition) return;
 		this.rotationAxis = axis;
 		this.column = column;
 		this.rotationVector = -this.rotationSpeed;
@@ -153,7 +154,7 @@ class RubikCube {
 			for(let item of this.selection)
 				rotateCube(item,this.rotationTotal);
 		} else {
-			if(this.onTransition) return;
+			// if(this.onTransition) return;
 			this.onTransition = true;
 			// this.rotationAxis = axis;
 			// this.column = column;
@@ -167,6 +168,7 @@ class RubikCube {
 	rotateL(axis,column) {
 		// counter clock wise
 		if(column < 0 || column > this.size-1 ) {console.log('index out of range');return;}
+		if(this.onTransition) return;
 		this.rotationAxis = axis;
 		this.column = column;
 		this.rotationVector = this.rotationSpeed;
@@ -176,7 +178,7 @@ class RubikCube {
 			for(let item of this.selection)
 				rotateCube(item,this.rotationTotal);
 		} else {
-			if(this.onTransition) return;
+			// if(this.onTransition) return;
 			this.onTransition = true;
 			
 			this.select(axis,column);
