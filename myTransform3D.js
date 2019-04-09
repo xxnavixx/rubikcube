@@ -40,6 +40,7 @@ class MyTransform3D {
 	
 	rotateY(rad) {
 		let m = new MyMatrix3D(cos(rad),0,-sin(rad), 0,1,0, sin(rad),0,cos(rad));
+		// let m = new MyMatrix3D(cos(rad),0,sin(rad), 0,1,0, -sin(rad),0,cos(rad)); // y coordinate of direction is reversed with math x,y,z convention
 		this.applyMatrix(m);
 	}
 	

@@ -2,6 +2,7 @@ let showtoggle = true, stopToggle = false;
 
 let img;
 let rc;
+let axis;
 
 function preload() {
 	img = loadImage('./image/1024px-Rainbow-gradient-fully-saturated-diagonal.svg.png');
@@ -15,7 +16,7 @@ function setup() {
 		stopToggle = !stopToggle;
 		console.log('stopped :',stopToggle);
 	});
-	xBtn = createButton('toggle');
+	xBtn = createButton('toggle axis');
 	xBtn.mouseClicked(()=>{showtoggle = !showtoggle;});
 	
 	//--------------------------------------------
@@ -75,6 +76,8 @@ function setup() {
 		// console.log(isNaN(columnIndex.value()));
 		// rc.rotateR(radioXYZ.value(),columnIndex.value());
 	});
+	
+	axis = new XYZAxis();
 }
 
 function draw() {
@@ -86,16 +89,17 @@ function draw() {
 	background('khaki');
 		
 	// to check origin and orientation
-	fill('red');
-	ellipse(0,0,10);
-	fill('blue');
-	ellipse(0,200,10);
-	fill('green');
-	ellipse(200,0,10);
-	
+	// fill('red');
+	// ellipse(0,0,10);
+	// fill('blue');
+	// ellipse(0,200,10);
+	// fill('green');
+	// ellipse(200,0,10);
+	// axis.draw();
 	// cube drawing
-	if(!showtoggle) return;
 	rc.draw();
+	if(!showtoggle) return;
+	axis.draw();
 
 }
 

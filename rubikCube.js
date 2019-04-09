@@ -99,7 +99,7 @@ class RubikCube {
 				this.swapSelectionR_sub();
 				break;
 		}
-		
+		// this.swapSelectionL_sub();
 
 	}
 	
@@ -113,7 +113,7 @@ class RubikCube {
 				this.swapSelectionL_sub();
 				break;
 		}
-		
+		// this.swapSelectionR_sub();
 	}
 	
 	swapSelectionR_sub(array) {
