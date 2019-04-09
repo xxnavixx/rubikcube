@@ -1,11 +1,23 @@
 let showtoggle = true, stopToggle = false;
 
-let img;
+let img,colorTop,colorBottom,colorLeft,colorRight,colorFront,colorBack;
+let imgX,imgY,imgZ;
 let rc;
 let axis;
+let test;
+let textResult;
 
 function preload() {
 	img = loadImage('./image/1024px-Rainbow-gradient-fully-saturated-diagonal.svg.png');
+	imgTop = loadImage('./image/rubikTop.png');
+	imgBottom = loadImage('./image/rubikBottom.png');
+	imgFront = loadImage('./image/rubikFront.png');
+	imgBack = loadImage('./image/rubikBack.png');
+	imgLeft = loadImage('./image/rubikLeft.png');
+	imgRight = loadImage('./image/rubikRight.png');
+	imgX = loadImage('./image/x.png');
+	imgY = loadImage('./image/y.png');
+	imgZ = loadImage('./image/z.png');
 }
 
 function setup() {
@@ -73,11 +85,14 @@ function setup() {
 	
 	rotationRight.mouseClicked(()=>{
 		rc.rotateR(radioXYZ.value(),Number(columnIndex.value()));
-		// console.log(isNaN(columnIndex.value()));
 		// rc.rotateR(radioXYZ.value(),columnIndex.value());
 	});
 	
+	textResult = createP();
+	textResult.position(20,20);
+
 	axis = new XYZAxis();
+	// test = new BoxX(100,0,0,40,40,40);
 }
 
 function draw() {
@@ -87,19 +102,22 @@ function draw() {
 	rotateZ(0.6);
 	
 	background('khaki');
-		
-	// to check origin and orientation
-	// fill('red');
-	// ellipse(0,0,10);
-	// fill('blue');
-	// ellipse(0,200,10);
-	// fill('green');
-	// ellipse(200,0,10);
-	// axis.draw();
-	// cube drawing
+
 	rc.draw();
 	if(!showtoggle) return;
 	axis.draw();
+			
+	// test.draw();
+	checkSolved();
+}
 
+function checkSolved() {
+	if(rc.check()) {
+			textResult.style('backgroundColor','green');
+			textResult.html('Solved');
+	} else {
+		textResult.style('backgroundColor','red');
+		textResult.html('Not solved');
+	}
 }
 

@@ -13,6 +13,7 @@ class RubikCube {
 		if(isNaN(size)) return;
 		
 		this.cubes = [];
+		this.cubesInitial = [];
 		this.size = size | 0;
 		this.size2 = size * size;
 		this.boxSize=boxSize;
@@ -30,7 +31,9 @@ class RubikCube {
 					let y = i*(boxSize+gap) - halfLength + this.boxSize/2;
 					let z = k*(boxSize+gap) - halfLength + this.boxSize/2;
 					
-					this.cubes.push(new BoxA(x,y,z,boxSize,boxSize,boxSize));
+					let temp = new BoxB(x,y,z,boxSize,boxSize,boxSize);
+					this.cubes.push(temp);
+					this.cubesInitial.push(temp);
 				}
 			}
 		}
@@ -62,7 +65,7 @@ class RubikCube {
 		}
 		return this.selection;
 	}
-			
+				
 	mergeSelection() {
 		
 		let counter = 0,index;
@@ -88,6 +91,14 @@ class RubikCube {
 			
 		}
 	}
+	
+	/*
+		after applying matrix transfrom. 9 selected cubes change its x,y,z coordinate.
+		but its position in array remain same.
+		this cause problem next turn because what u see as selected is not what actually selected in array.
+		so we need to rearrange array element according to matrix transformation. that's why i needed 'swap' functions.
+	
+	*/
 	
 	swapSelectionL() {
 		switch(this.rotationAxis){
@@ -141,113 +152,92 @@ class RubikCube {
 		}
 		for(let i=0;i<this.selection.length;i++) this.selection[i] = this.selectionTemp[i];
 	}
-	
+		
 	rotateR(axis,column) {
-		//clock wise
-		if(column < 0 || column > this.size-1 ) {console.log('index out of range');return;}
-		if(this.onTransition) return;
-		this.rotationAxis = axis;
-		this.column = column;
-		this.rotationVector = -this.rotationSpeed;
-		this.rotationTotal = -this.rotationMax;
-		if(!this.animation){
-			for(let item of this.selection)
-				rotateCube(item,this.rotationTotal);
-		} else {
-			// if(this.onTransition) return;
-			this.onTransition = true;
-			// this.rotationAxis = axis;
-			// this.column = column;
-			this.select(axis,column);
-			for(let item of this.selection) {
-				item.tran.push();	
-			}
-		}
+		// clock wise
+		this._rotateSub(axis,column,-1);
 	}
 	
 	rotateL(axis,column) {
 		// counter clock wise
+		this._rotateSub(axis,column,1);
+	}
+	
+	_rotateSub(axis,column,factor=1) {
 		if(column < 0 || column > this.size-1 ) {console.log('index out of range');return;}
 		if(this.onTransition) return;
 		this.rotationAxis = axis;
 		this.column = column;
-		this.rotationVector = this.rotationSpeed;
-		this.rotationTotal = this.rotationMax;
+		this.rotationVector = this.rotationSpeed * factor;
+		this.rotationTotal = this.rotationMax * factor;
+		this.select(axis,column);
 		
 		if(!this.animation){
-			for(let item of this.selection)
-				rotateCube(item,this.rotationTotal);
-		} else {
-			// if(this.onTransition) return;
-			this.onTransition = true;
+			this.rotateSelection(this.rotationTotal);
+			if(this.rotationVector>0) 
+				this.swapSelectionL();
+			else 
+				this.swapSelectionR();
 			
-			this.select(axis,column);
-			for(let item of this.selection) {
+			this.mergeSelection();				
+		} else {
+			this.onTransition = true;
+			for(let item of this.selection) 
 				item.tran.push();	
-			}
 		}
 	}
 	
-	rotateCube(cube,rad) {
-		switch(this.rotationAxis){
-			case 'x':
-				cube.rotateX(rad);
-				break;
-			case 'y':
-				cube.rotateY(rad);
-				break;
-			case 'z':
-				cube.rotateZ(rad);
-				break;
+	rotateSelection(rad) {
+		for(let item of this.selection){
+			switch(this.rotationAxis){
+				case 'x':
+					item.rotateX(rad);
+					break;
+				case 'y':
+					item.rotateY(rad);
+					break;
+				case 'z':
+					item.rotateZ(rad);
+					break;
+			}
 		}
 	}
 
 	draw() {
 		if(this.animation  && this.onTransition){
 			if(abs(this.rotatedAngle) < this.rotationMax){
-				for(let item of this.selection) {
-					switch(this.rotationAxis) {
-						case 'x':
-							item.rotateX(this.rotationVector);
-							break;
-						case 'y':
-							item.rotateY(this.rotationVector);
-							break;
-						case 'z':
-							item.rotateZ(this.rotationVector);
-							break;
-					}
-				}
+
+				this.rotateSelection(this.rotationVector);
 				this.rotatedAngle += this.rotationVector;
 			} else {
-				for(let item of this.selection) {
+				for(let item of this.selection) 
 					item.tran.pop();
-					
-					switch(this.rotationAxis){
-						case 'x':
-							// item.rotateX(HALF_PI);
-							item.rotateX(this.rotationTotal);
-							break;
-						case 'y':
-							item.rotateY(this.rotationTotal);
-							break;
-						case 'z':
-							item.rotateZ(this.rotationTotal);
-							break;
-					}					
-				}
-				this.onTransition = false;
-				this.rotatedAngle = 0;
 				
+				this.rotateSelection(this.rotationTotal);
+								
 				if(this.rotationVector>0)
 					this.swapSelectionL();
 				else
 					this.swapSelectionR();
 				
 				this.mergeSelection();		
+				
+				this.onTransition = false;
+				this.rotatedAngle = 0;
 			}
 		}
 		
 		for(let item of this.cubes) item.draw();
 	}
+	
+	check() {
+		for(let i=0;i<this.cubes.length;i++){
+			if(this.cubes[i] !== this.cubesInitial[i]) return false;
+		}
+		return true;
+	}
 }
+
+
+
+

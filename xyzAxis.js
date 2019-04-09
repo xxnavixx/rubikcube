@@ -9,9 +9,14 @@ class XYZAxis {
 		this.hx = this.x /2;
 		this.hy = this.y /2;
 		this.hz = this.z /2;
+		
+		this.textX = new BoxX(this.x*1.6);
+		this.textY = new BoxY(this.y*1.6);
+		this.textZ = new BoxZ(this.z*1.6);
 	}
 	
 	draw() {
+			
 		push();
 		fill('blue');
 		translate(this.x,0,0);
@@ -45,5 +50,9 @@ class XYZAxis {
 		rotateX(HALF_PI);
 		cylinder(this.cylinderBottom,this.y);
 		pop();
+		
+		this.textX.draw();
+		this.textY.draw();
+		this.textZ.draw();
 	}
 }
